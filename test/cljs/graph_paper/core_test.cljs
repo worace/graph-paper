@@ -23,6 +23,9 @@
 (deftest test-graph-paper
   (is (th/found-in #"Hello" (th/by-id "app"))))
 
+;(deftest test-renders-canvas
+  ;(is (= 1 (count (th/by-tag "canvas")))))
+
 (defn run-tests []
   (.clear js/console)
   (cljs.test/run-all-tests #"graph-paper.*-test"))
@@ -35,4 +38,5 @@
            :websocket-url "ws://localhost:3449/figwheel-ws"
            ;; :autoload false
            :build-id "test"
+           :js-load (fn [] (println "JSLoad connected"))
            })
