@@ -1,4 +1,4 @@
-(ns hello-world.test-formatter
+(ns graph-paper.test-formatter
   (:require
     [cljs.test :as test :include-macros true :refer [report]]))
 

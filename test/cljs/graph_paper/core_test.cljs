@@ -1,10 +1,10 @@
-(ns ^:figwheel-always hello-world.core-test
+(ns ^:figwheel-always graph-paper.core-test
   (:require
     [cljs.test :refer-macros [deftest testing is]]
-    [hello-world.test-formatter :as formatter]
+    [graph-paper.test-formatter :as formatter]
     [figwheel.client :as fw]
-    [hello-world.test-helpers :as th]
-    [hello-world.core :as hw]))
+    [graph-paper.test-helpers :as th]
+    [graph-paper.core :as hw]))
 
 (enable-console-print!)
 
@@ -20,12 +20,12 @@
 (deftest test-tacos
   (is (= 1 1)))
 
-(deftest test-hello-world
+(deftest test-graph-paper
   (is (th/found-in #"Hello" (th/by-id "app"))))
 
 (defn run-tests []
   (.clear js/console)
-  (cljs.test/run-all-tests #"hello-world.*-test"))
+  (cljs.test/run-all-tests #"graph-paper.*-test"))
 (run-tests)
 
 ;; FW connection is optional in order to simply run tests,

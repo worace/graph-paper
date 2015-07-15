@@ -1,4 +1,4 @@
-(defproject hello-world "0.1.0-SNAPSHOT"
+(defproject graph-paper "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -24,11 +24,11 @@
     :builds [{:id "dev"
               :source-paths ["src"]
 
-              :figwheel { :on-jsload "hello-world.core/on-js-reload" }
+              :figwheel { :on-jsload "graph-paper.core/on-js-reload" }
 
-              :compiler {:main hello-world.core
+              :compiler {:main graph-paper.core
                          :asset-path "js/compiled/out"
-                         :output-to "resources/public/js/compiled/hello_world.js"
+                         :output-to "resources/public/js/compiled/graph_paper.js"
                          :output-dir "resources/public/js/compiled/out"
                          :source-map-timestamp true }}
 
@@ -38,7 +38,7 @@
               :compiler {:output-to "resources/public/js/compiled/test/test.js"
                          :output-dir "resources/public/js/compiled/test/out"
                          :optimizations :none
-                         :main hello-world.core-test
+                         :main graph-paper.core-test
                          :asset-path "js/compiled/test/out"
                          :source-map true
                          :cache-analysis true }}]}
@@ -55,7 +55,7 @@
              ;; if you want to embed a ring handler into the figwheel http-kit
              ;; server, this is for simple ring servers, if this
              ;; doesn't work for you just run your own server :)
-             ;; :ring-handler hello_world.server/handler
+             ;; :ring-handler graph_paper.server/handler
 
              ;; To be able to open files in your editor from the heads up display
              ;; you will need to put a script on your path.

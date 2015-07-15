@@ -1,4 +1,4 @@
-(ns hello-world.test-helpers
+(ns graph-paper.test-helpers
   (:require [goog.dom :as dom]))
 
 (defn found-in [re div]
@@ -13,4 +13,4 @@
   [id]
   (dom/getElement (name id)))
 
-(def rflush reagent/flush)
+;(def rflush reagent/flush)
