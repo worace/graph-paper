@@ -3,7 +3,7 @@
     [cljs.test :refer-macros [deftest testing is]]
     [graph-paper.test-formatter :as formatter]
     [figwheel.client :as fw]
-    [graph-paper.test-helpers :as th]
+    [graph-paper.helpers :as h]
     [graph-paper.core :as hw]))
 
 (enable-console-print!)
@@ -21,10 +21,10 @@
   (is (= 1 1)))
 
 (deftest test-graph-paper
-  (is (th/found-in #"Hello" (th/by-id "app"))))
+  (is (h/found-in #"Hello" (h/by-id "app"))))
 
 ;(deftest test-renders-canvas
-  ;(is (= 1 (count (th/by-tag "canvas")))))
+  ;(is (= 1 (count (h/by-tag "canvas")))))
 
 (defn run-tests []
   (.clear js/console)
