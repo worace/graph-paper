@@ -6,6 +6,9 @@
 
 (defonce app-state (atom {:text "Hello world!"}))
 
+(defn set-font [canvas size font]
+  (set! (.-font canvas) (str size "px " font)))
+
 (defn make-canvas []
   (.createElement js/document "canvas"))
 
@@ -16,15 +19,19 @@
   (.clearRect (context canvas) 0 0 (.-width canvas) (.-height canvas)))
 
 (defn render-text [canvas text]
-  (println "hi rendering text ", text)
-  (.fillText (context canvas) text 10 30)
-  )
+  (let [ctx (context canvas)]
+    (set-font ctx 20 "Courier New")
+    (.fillText ctx text 10 30)))
 
 (clear canvas)
 (render-text canvas (:text @app-state))
 
 (defn graph-paper []
-  [:h1 (:text @app-state)])
+  [:h1 (:text @app-state)
+   [:div
+    [:svg {:width 200 :height 200 :style {:border "1px solid black" :font-family "Courier New" :font-size "14px"}}
+    [:text { :x 0 :y 14 } "pizza"]]]
+   ])
 
 (reagent/render-component [graph-paper]
                           (. js/document (getElementById "app")))
