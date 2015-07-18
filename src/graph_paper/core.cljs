@@ -26,7 +26,6 @@
 
 (events/register-handler! :mouse-move
  (fn [event]
-   (println (str "woo mouse moved!" event))
    (swap! app-state assoc-in [:target-coord] (event :coord))))
 
 (defn node-renderer [font-size]
@@ -40,12 +39,10 @@
      text]))
 
 (defn grid [width height chars]
-  [:svg {:width width
-         :height height
+  [:svg {:width width :height height :class "noselect graph-paper-grid"
          :on-mouse-up (fn [] (events/log {:type :mouse-up}) nil)
          :on-mouse-down (fn [] (events/log {:type :mouse-down}) nil)
-         :class "noselect"
-         :style {:font-family "Courier New" :font-size "14px"}}
+         }
    (doall (map (node-renderer 14) chars))])
 
 (defn status-bar [state]
