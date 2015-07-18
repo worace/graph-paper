@@ -2,6 +2,7 @@
     (:require [reagent.core :as reagent :refer [atom]]
               [graph-paper.event-channels :as events]
               [graph-paper.grid :as grid]
+              [graph-paper.figures :as figs]
               [graph-paper.helpers :as h]))
 
 (enable-console-print!)
@@ -25,6 +26,12 @@
 
 (events/register-handler! :mouse-up
  (fn [event]
+   (swap! app-state
+          assoc-in
+          [:grid-chars]
+          (merge (@app-state :grid-chars)
+                 (figs/line (@app-state :current-figure-start)
+                            (@app-state :target-coord))))
    (swap! app-state assoc-in [:drawing] false)))
 
 (events/register-handler! :mouse-move
