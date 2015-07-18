@@ -6,8 +6,13 @@ using Clojurescript and Reagent (an interface to React).
 
 #### To Run
 
-The project includes 2 builds -- `dev` for building just the app itself
-and `test` for the test suite.
+Install dependencies with:
+
+```
+lein deps
+```
+
+The project includes 2 builds -- `dev` for building just the app itself and `test` for the test suite.
 
 Run just dev with:
 
