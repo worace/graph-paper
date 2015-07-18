@@ -4,12 +4,14 @@
 
 (enable-console-print!)
 
+(defn grid-chars [width height]
+  (into (sorted-map)
+        (for [x (range 1 (+ 1 width))
+              y (range 1 (+ 1 height))]
+          {[x y] "."})))
+
 (defonce app-state (atom {:text "welcome to graphpaper"
-                          :text-els ["pizza----"
-                                     "........|"
-                                     "........|"
-                                     "........V"
-                                     "......tacos"]}))
+                          :grid-chars (grid-chars 50 50)}))
 
 (defn mouse-down [] (println "mouse-down"))
 
@@ -21,29 +23,28 @@
 
 
 (defn node-renderer [font-size]
-  (let [c (atom 0)]
-    (fn [text]
-      (println "fetching new row offset " c)
-      (swap! c inc)
-      ^{:key (str text (tick))}
-      [:text
-       {:x 0
-        :y (* font-size @c)
-        }
-       text])))
+  (fn [[[x y] text]]
+    ;; (println "got text: " text " and coords: " [x y])
+    ^{:key (str "pos-x-" x "-y-" y)}
+    [:text
+     {:x (* font-size x)
+      :y (* font-size y)
+      :on-mouse-down (partial println "mousedown" " x: " x " y: " y)
+      :on-mouse-up (partial println "mouseup" "x: " x " y: " y)
+      }
+     text]))
 
 (defn grid [width height chars]
   [:svg {:width width
          :height height
-         :on-mouse-down (partial println "mousedown")
-         :on-mouse-up (partial println "mouseup")
+         :user-select "none"
          :style {:font-family "Courier New" :font-size "14px"}}
    (doall (map (node-renderer 14) chars))])
 
 (defn graph-paper []
   [:h1 (:text @app-state)
    [:div
-    [grid 400 400 (:text-els @app-state)]]
+    [grid 400 400 (:grid-chars @app-state)]]
    ])
 
 (reagent/render-component [graph-paper]
