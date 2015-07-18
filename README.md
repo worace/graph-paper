@@ -1,8 +1,8 @@
-### Lein Figwheel Example With Autotesting
+### Graph Paper - ASCII Drawing Tool
 
-This trivial application serves as an example of
-combining figwheel, reagent, and some cljs.test configuration
-to allow auto-running tests in the browser on code reload.
+This (very work in progress) app is a playground for exploring
+drawing in a web browser using basic ascii shapes. Implemented
+using Clojurescript and Reagent (an interface to React).
 
 #### To Run
 
@@ -34,22 +34,36 @@ View the app at `http://localhost:3449/` and the tests at `http://localhost:3449
 
 __Test Display__
 
+Tests run in the browser at [http://localhost:3449/test.html](http://localhost:3449/test.html).
+
 Currently test output is just displayed in the JS dev console. Maybe
 will add some HTML display at some point.
 
-__Getting Correct Test Auto-Building__
+### Design Todos / Notes
 
-I have been struggling a lot with getting correct behavior from the test auto-builder.
-I would like to have the tests run automatically in the browser via figwheel's notification infrastructure
-whenever a file is saved.
+* Text rendering: SVG seems preferable (also experimented with canvas) since
+it can be natively integrated with React
 
-But running the standard test build with `lein figwheel test` seems to produce
-inconsistent behavior -- new changes to test files are not usually picked up.
+__Data / State Storage__
 
-At the moment, I've found that I need to _also_ run `cljsbuild auto test` as a way
-of ensuring that test files get re-compiled on every save. This combo is a bit frustrating
-since you need to have 2 build processes going at any time, but it's the only thing I've
-been able to get working very consistently so far.
+* 1 big string?
+* seq of row strings?
+* matrix of rows and chars?
+* map of [x y] => char?
+
+__Click Handling__
+
+* [ ] Detect clicks on SVG
+* [ ] Determine click location format (probably x,y?)
+* [ ] How to map click locations to chars in the grid structure
+
+__Drawing Tools__
+
+* [ ] Lines (90-degrees? Diagonal?)
+* [ ] Squares
+* [ ] Text
+* [ ] Selection tool
+
 
 ### Credit
 
