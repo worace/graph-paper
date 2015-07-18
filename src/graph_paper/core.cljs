@@ -1,6 +1,7 @@
 (ns ^:figwheel-always graph-paper.core
     (:require [reagent.core :as reagent :refer [atom]]
               [graph-paper.event-channels :as events]
+              [graph-paper.grid :as grid]
               [graph-paper.helpers :as h]))
 
 (enable-console-print!)
@@ -11,17 +12,11 @@
 ;;generate line between start and end point
 ;;add it into the grid
 
-(defn grid-chars [width height]
-  (into (sorted-map)
-        (for [x (range 0 width)
-              y (range 0 height)]
-          {[x y] "."})))
-
 (defonce app-state (atom {:text "welcome to graphpaper"
                           :drawing false
                           :target-coord []
                           :current-figure-start []
-                          :grid-chars (grid-chars 50 50)}))
+                          :grid-chars (grid/generate 50 50)}))
 
 (events/register-handler! :mouse-down
  (fn [event]
