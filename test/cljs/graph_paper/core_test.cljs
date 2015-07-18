@@ -4,27 +4,16 @@
     [graph-paper.test-formatter :as formatter]
     [figwheel.client :as fw]
     [graph-paper.helpers :as h]
+    [dommy.core :refer-macros [sel sel1]]
     [graph-paper.core :as hw]))
 
 (enable-console-print!)
 
-(deftest test-pizza
-  (is (= "pizza" "pizza")))
-
-(deftest test-four
-  (is (= 1 1)))
-
-(deftest test-five
-  (is (= 1 1)))
-
-(deftest test-tacos
-  (is (= 1 1)))
-
 (deftest test-graph-paper
-  (is (h/found-in #"Hello" (h/by-id "app"))))
+  (is (h/found-in #"welcome" (sel1 "#app"))))
 
-;(deftest test-renders-canvas
-  ;(is (= 1 (count (h/by-tag "canvas")))))
+(deftest test-renders-canvas
+  (is (= 1 (count (sel ".graph-paper-grid")))))
 
 (defn run-tests []
   (.clear js/console)
