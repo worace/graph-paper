@@ -49,6 +49,13 @@
     (is (= "|" (line [2 2])))
     ))
 
+;;     F
+;;     |
+;;     |
+;;S-----
+(deftest drawing-bottom-left-to-upper-right
+  (is "pending"))
+
 
 ;;SETUP
 (defn run-tests []
