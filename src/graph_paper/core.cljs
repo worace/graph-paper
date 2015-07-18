@@ -1,5 +1,6 @@
 (ns ^:figwheel-always graph-paper.core
     (:require [reagent.core :as reagent :refer [atom]]
+              [graph-paper.event-channels :as events]
               [graph-paper.helpers :as h]))
 
 (enable-console-print!)
@@ -17,13 +18,20 @@
 
 (defn mouse-over-handler [x y]
   (fn []
+    (events/log {:type :mouse-move :coord [x y]})
     (swap! app-state assoc-in [:target-coord] [x y])))
+
+(events/register-handler! :mouse-down #(println "woo moused down!"))
+(events/register-handler! :mouse-up #(println "woo moused up!"))
+(events/register-handler! :mouse-move #(println "woo mouse moved!"))
 
 (defn mouse-down []
   (println "MOUSE DOWN")
+  (events/log {:type :mouse-down})
   (swap! app-state assoc-in [:drawing] true))
 
 (defn mouse-up []
+  (events/log {:type :mouse-up})
   (swap! app-state assoc-in [:drawing] false))
 
 (defn node-renderer [font-size]
