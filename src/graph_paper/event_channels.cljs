@@ -17,5 +17,4 @@
       (let [event (<! event-stream)
             type (event :type)
             handler (@event-handlers type)]
-        (println "handler: " handler)
-        (when handler (handler)))))
+        (when handler (handler event)))))

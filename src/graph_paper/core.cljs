@@ -16,39 +16,34 @@
                           :target-coord []
                           :grid-chars (grid-chars 50 50)}))
 
-(defn mouse-over-handler [x y]
-  (fn []
-    (events/log {:type :mouse-move :coord [x y]})
-    (swap! app-state assoc-in [:target-coord] [x y])))
+(events/register-handler! :mouse-down
+ (fn [event]
+   (swap! app-state assoc-in [:drawing] true)))
 
-(events/register-handler! :mouse-down #(println "woo moused down!"))
-(events/register-handler! :mouse-up #(println "woo moused up!"))
-(events/register-handler! :mouse-move #(println "woo mouse moved!"))
+(events/register-handler! :mouse-up
+ (fn [event]
+   (swap! app-state assoc-in [:drawing] false)))
 
-(defn mouse-down []
-  (println "MOUSE DOWN")
-  (events/log {:type :mouse-down})
-  (swap! app-state assoc-in [:drawing] true))
-
-(defn mouse-up []
-  (events/log {:type :mouse-up})
-  (swap! app-state assoc-in [:drawing] false))
+(events/register-handler! :mouse-move
+ (fn [event]
+   (println (str "woo mouse moved!" event))
+   (swap! app-state assoc-in [:target-coord] (event :coord))))
 
 (defn node-renderer [font-size]
   (fn [[[x y] text]]
-    ;; (println "got text: " text " and coords: " [x y])
     ^{:key (str "pos-x-" x "-y-" y)}
     [:text
      {:x (* font-size x)
       :y (* font-size y)
-      :on-mouse-over (mouse-over-handler x y)}
+      :on-mouse-over (fn [] (events/log {:type :mouse-move :coord [x y]}) nil)
+      }
      text]))
 
 (defn grid [width height chars]
   [:svg {:width width
          :height height
-         :on-mouse-up mouse-up
-         :on-mouse-down mouse-down
+         :on-mouse-up (fn [] (events/log {:type :mouse-up}) nil)
+         :on-mouse-down (fn [] (events/log {:type :mouse-down}) nil)
          :class "noselect"
          :style {:font-family "Courier New" :font-size "14px"}}
    (doall (map (node-renderer 14) chars))])
