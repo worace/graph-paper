@@ -17,6 +17,7 @@
                           :drawing false
                           :target-coord []
                           :current-figure-start []
+                          :pending-figure {}
                           :grid-chars (grid/generate 50 50)}))
 
 ;; Live Drawing
@@ -41,10 +42,17 @@
           (merge (@app-state :grid-chars)
                  (figs/line (@app-state :current-figure-start)
                             (@app-state :target-coord))))
+   (swap! app-state assoc-in [:pending-figure] {})
    (swap! app-state assoc-in [:drawing] false)))
 
 (events/register-handler! :mouse-move
  (fn [event]
+   (if (@app-state :drawing)
+     (swap! app-state
+            assoc-in
+            [:pending-figure]
+            (figs/line (@app-state :current-figure-start)
+                       (@app-state :target-coord))))
    (swap! app-state assoc-in [:target-coord] (event :coord))))
 
 (defn node-renderer [font-size]
@@ -70,13 +78,13 @@
            " Current mouse: "
            (state :target-coord)
            " Current fig start: "
-           (state :current-figure-start))])
+           ".")])
 
 (defn graph-paper []
   [:h1 (@app-state :text)
-   [status-bar (select-keys @app-state [:drawing :target-coord :current-figure-start])]
+   [status-bar (select-keys @app-state [:drawing :target-coord :current-figure-start :pending-figure])]
    [:div
-    [grid 400 400 (@app-state :grid-chars)]]
+    [grid 400 400 (merge (@app-state :grid-chars) (@app-state :pending-figure))]]
    ])
 
 (reagent/render-component [graph-paper]
