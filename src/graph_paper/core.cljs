@@ -19,6 +19,15 @@
                           :current-figure-start []
                           :grid-chars (grid/generate 50 50)}))
 
+;; Live Drawing
+;; As mouse moves - need to generate "in progress"
+;; shape based on coords so far
+;; When rendering, need to include any in-progress
+;; figures in the render
+;; When mouse released; need to render final version of fig
+;; remove in progress
+;; and commit new one to the graph by merging into grid-chars
+
 (events/register-handler! :mouse-down
  (fn [event]
    (swap! app-state assoc-in [:current-figure-start] (@app-state :target-coord))
