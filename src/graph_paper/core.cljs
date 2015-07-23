@@ -18,7 +18,7 @@
                           :target-coord []
                           :current-figure-start []
                           :pending-figure {}
-                          :grid-chars (grid/generate 50 50)}))
+                          :grid-chars (grid/generate 30 30)}))
 
 ;; Live Drawing
 ;; As mouse moves - need to generate "in progress"
@@ -29,31 +29,35 @@
 ;; remove in progress
 ;; and commit new one to the graph by merging into grid-chars
 
-(events/register-handler! :mouse-down
- (fn [event]
-   (swap! app-state assoc-in [:current-figure-start] (@app-state :target-coord))
-   (swap! app-state assoc-in [:drawing] true)))
+(defn mouse-down-handler [event]
+  (swap! app-state assoc-in [:current-figure-start] (@app-state :target-coord))
+  (swap! app-state assoc-in [:drawing] true))
 
-(events/register-handler! :mouse-up
- (fn [event]
-   (swap! app-state
-          assoc-in
-          [:grid-chars]
-          (merge (@app-state :grid-chars)
-                 (figs/line (@app-state :current-figure-start)
-                            (@app-state :target-coord))))
-   (swap! app-state assoc-in [:pending-figure] {})
-   (swap! app-state assoc-in [:drawing] false)))
+(events/register-handler! :mouse-down mouse-down-handler)
 
-(events/register-handler! :mouse-move
- (fn [event]
-   (if (@app-state :drawing)
-     (swap! app-state
-            assoc-in
-            [:pending-figure]
-            (figs/line (@app-state :current-figure-start)
-                       (@app-state :target-coord))))
-   (swap! app-state assoc-in [:target-coord] (event :coord))))
+(defn mouse-up-handler [event]
+  (swap! app-state
+         assoc-in
+         [:grid-chars]
+         (merge (@app-state :grid-chars)
+                (figs/line (@app-state :current-figure-start)
+                           (@app-state :target-coord))))
+  (swap! app-state assoc-in [:pending-figure] {})
+  (swap! app-state assoc-in [:drawing] false))
+
+(events/register-handler! :mouse-up mouse-up-handler)
+
+
+(defn move-handler [event]
+  (if (@app-state :drawing)
+    (swap! app-state
+           assoc-in
+           [:pending-figure]
+           (figs/line (@app-state :current-figure-start)
+                      (@app-state :target-coord))))
+  (swap! app-state assoc-in [:target-coord] (event :coord)))
+
+(events/register-handler! :mouse-move move-handler)
 
 (defn node-renderer [font-size]
   (fn [[[x y] text]]
