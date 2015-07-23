@@ -40,21 +40,21 @@
     (is (= "|" (line [0 2])))
     ))
 
-(deftest test-making-hooked-lines
-  (let [line (figs/line [0 0] [2 2])]
+(deftest test-making-lines-with-both-x-and-y-diff
+  (testing "it draws a single line in whichever dir has the largest diff"
+    (let [line (figs/line [0 0] [2 1])]
     (is (= "-" (line [0 0])))
     (is (= "-" (line [1 0])))
     (is (= "-" (line [2 0])))
-    (is (= "|" (line [2 1])))
-    (is (= "|" (line [2 2])))
-    ))
+    (is (= [[0 0] [1 0] [2 0]] (keys line))))))
 
-;;     F
-;;     |
-;;     |
-;;S-----
-(deftest drawing-bottom-left-to-upper-right
-  (is "pending"))
+(deftest test-line-with-greater-y-diff
+  (let [line (figs/line [0 0] [1 3])]
+    (is (= "|" (line [0 0])))
+    (is (= "|" (line [0 1])))
+    (is (= "|" (line [0 2])))
+    (is (= "|" (line [0 3])))
+    (is (= [[0 0] [0 1] [0 2] [0 3]] (keys line)))))
 
 
 ;;SETUP
