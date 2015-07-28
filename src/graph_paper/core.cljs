@@ -1,5 +1,5 @@
 (ns ^:figwheel-always graph-paper.core
-    (:require [reagent.core :as reagent :refer [atom]]
+    (:require [reagent.core :as reagent :refer [atom cursor]]
               [graph-paper.event-channels :as events]
               [graph-paper.grid :as grid]
               [graph-paper.figures :as figs]
@@ -49,32 +49,42 @@
 
 
 (defn move-handler [event]
+  (println "moving! " event)
   (if (@app-state :drawing)
     (swap! app-state
            assoc-in
            [:pending-figure]
            (figs/line (@app-state :current-figure-start)
                       (@app-state :target-coord))))
-  (swap! app-state assoc-in [:target-coord] (event :coord)))
+  (println (event :coord))
+  (println (@app-state :target-coord))
+  (println ((@app-state :grid-chars) (event :coord)))
+  (let [c (cursor app-state [:grid-chars (event :coord)])]
+    (println c)
+    (println @c)
+    (swap! c assoc-in "H"))
+  #_(swap! app-state assoc-in [:target-coord] (event :coord)))
 
 (events/register-handler! :mouse-move move-handler)
 
 (defn node-renderer [font-size]
   (fn [[[x y] text]]
-    ^{:key (str "pos-x-" x "-y-" y)}
+    ^{:key (str "pos-x-" x "-y-" y "-val-" text)}
     [:text
      {:x (* font-size (inc x))
       :y (* font-size (inc y))
-      :on-mouse-over (fn [] (events/log {:type :mouse-move :coord [x y]}) nil)
+      :on-mouse-over (fn [] (println "mousing over x: " x " y: " y) (events/log {:type :mouse-move :coord [x y]}) nil)
       }
-     text]))
+     @text]))
 
 (defn grid [width height chars]
   [:svg {:width width :height height :class "noselect graph-paper-grid"
          :on-mouse-up (fn [] (events/log {:type :mouse-up}) nil)
          :on-mouse-down (fn [] (events/log {:type :mouse-down}) nil)
          }
-   (doall (map (node-renderer 14) chars))])
+   (let [renderer (node-renderer 14)]
+     (for [y (range 30) x (range 30)]
+       (renderer [[x y] (cursor app-state [:grid-chars [x y]])])))])
 
 (defn status-bar [state]
   [:p (str "Drawing: "
@@ -93,6 +103,8 @@
 
 (reagent/render-component [graph-paper]
                           (. js/document (getElementById "app")))
+
+(println "make my cursor: " (reagent/cursor app-state [:text]))
 
 (defn on-js-reload []
   ;; optionally touch your app-state to force rerendering depending on your application
